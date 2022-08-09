@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 
     InputEmulator emulator;
 
-    SerialGamepad gamepad(115200);
+    SerialGamepad gamepad(9600);
     QObject::connect(&gamepad, &SerialGamepad::buttonsChanged, [&gamepad, &emulator]() { updateControll(gamepad, emulator); });
 
     QTimer timer;
