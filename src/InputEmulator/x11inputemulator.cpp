@@ -191,7 +191,59 @@ void X11inputemulator::emulateMouseButton(InputEmulatorTypes::MouseButton button
     }
 }
 
-void X11inputemulator::emulateMouseWheel(double x, double y)
+bool X11inputemulator::isMouseWheelSpeedAvailable() const
+{
+    return false;
+}
+
+void X11inputemulator::emulateMouseWheelClick(InputEmulatorTypes::MouseWheelClick x, InputEmulatorTypes::MouseWheelClick y)
+{
+    if (!display)
+    {
+        std::cerr << "Display not opened" << std::endl;
+        return;
+    }
+
+    int button = 0;
+
+    switch (y)
+    {
+    case InputEmulatorTypes::MouseWheelClick::NotClicked:
+        break;
+    case InputEmulatorTypes::MouseWheelClick::Positive:
+        button = Button5;
+        break;
+    case InputEmulatorTypes::MouseWheelClick::Negative:
+        button = Button4;
+        break;
+    }
+
+    int ret = XTestFakeButtonEvent((Display*)display, button, true, CurrentTime);
+    XFlush((Display*)display);
+    if (ret != 1)
+    {
+        std::cerr << "XTestFakeButtonEvent error " << ret << std::endl;
+    }
+
+    ret = XTestFakeButtonEvent((Display*)display, button, false, CurrentTime);
+    XFlush((Display*)display);
+    if (ret != 1)
+    {
+        std::cerr << "XTestFakeButtonEvent error " << ret << std::endl;
+    }
+
+    if (x != InputEmulatorTypes::MouseWheelClick::NotClicked)
+    {
+        std::cerr << "Not implemented" << std::endl;
+    }
+}
+
+bool X11inputemulator::isHorizontalScrollAvailable() const
+{
+    return false;
+}
+
+void X11inputemulator::emulateMouseWheelSpeed(double, double)
 {
     std::cerr << "Not implemented" << std::endl;
 }
@@ -226,11 +278,6 @@ void X11inputemulator::emulateMouseMoveAbsolute(int64_t x, int64_t y)
     {
         std::cerr << "XTestFakeButtonEvent error " << ret << std::endl;
     }
-}
-
-bool X11inputemulator::isHorizontalScrollAvailable() const
-{
-    return false;
 }
 
 void X11inputemulator::emulateKeyboard(InputEmulatorTypes::Key key_, bool down)

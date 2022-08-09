@@ -25,9 +25,19 @@ void InputEmulator::emulateMouseButton(InputEmulatorTypes::MouseButton button, b
     platform.emulateMouseButton(button, down);
 }
 
-void InputEmulator::emulateMouseWheel(double x, double y)
+void InputEmulator::emulateMouseWheelSpeed(double x, double y)
 {
-    platform.emulateMouseWheel(x, y);
+    platform.emulateMouseWheelSpeed(x, y);
+}
+
+bool InputEmulator::isMouseWheelSpeedAvailable() const
+{
+    return platform.isMouseWheelSpeedAvailable();
+}
+
+void InputEmulator::emulateMouseWheelClick(InputEmulatorTypes::MouseWheelClick x, InputEmulatorTypes::MouseWheelClick y)
+{
+    platform.emulateMouseWheelClick(x, y);
 }
 
 void InputEmulator::emulateMouseMoveRelative(int64_t dx, int64_t dy)

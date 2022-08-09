@@ -38,6 +38,12 @@ enum class MouseButton {
     MouseButton_Right,
 };
 
+enum class MouseWheelClick {
+    NotClicked,
+    Positive,
+    Negative
+};
+
 enum class Key {
     Key_Unknown,
 

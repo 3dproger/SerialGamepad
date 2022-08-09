@@ -11,7 +11,9 @@ public:
     ~InputEmulator();
 
     void emulateMouseButton(InputEmulatorTypes::MouseButton button, bool down);
-    void emulateMouseWheel(double x, double y);
+    void emulateMouseWheelSpeed(double x, double y);
+    bool isMouseWheelSpeedAvailable() const;
+    void emulateMouseWheelClick(InputEmulatorTypes::MouseWheelClick x, InputEmulatorTypes::MouseWheelClick y);
     void emulateMouseMoveRelative(int64_t dx, int64_t dy);
     void emulateMouseMoveAbsolute(int64_t x, int64_t y);
     bool isHorizontalScrollAvailable() const;
