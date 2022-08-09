@@ -171,6 +171,18 @@ BYTE convertKey(InputEmulatorTypes::Key key, BYTE& s, bool& ok)
     return 0;
 }
 
+double mouseWheelClickToSpeed(InputEmulatorTypes::MouseWheelClick click)
+{
+    switch (click)
+    {
+    case InputEmulatorTypes::MouseWheelClick::NotClicked: return 0;
+    case InputEmulatorTypes::MouseWheelClick::Positive: return 1;
+    case InputEmulatorTypes::MouseWheelClick::Negative: return -1;
+    }
+
+    return 0;
+}
+
 }
 
 void WinApiInputEmulator::emulateMouseButton(InputEmulatorTypes::MouseButton button, bool down)
@@ -192,7 +204,7 @@ void WinApiInputEmulator::emulateMouseButton(InputEmulatorTypes::MouseButton but
     mouse_event(dwFlags, pos.x, pos.y, 0, 0);
 }
 
-void WinApiInputEmulator::emulateMouseWheel(double x, double y)
+void WinApiInputEmulator::emulateMouseWheelSpeed(double x, double y)
 {
     POINT pos;
     if (!GetCursorPos(&pos))
@@ -202,9 +214,21 @@ void WinApiInputEmulator::emulateMouseWheel(double x, double y)
 
 #if defined(MOUSEEVENTF_HWHEEL)
     mouse_event(MOUSEEVENTF_HWHEEL, pos.x, pos.y, DWORD(WHEEL_DELTA * x), 0);
+#else
+    std::cerr << "Not implemented" << std::endl;
 #endif
 
     mouse_event(MOUSEEVENTF_WHEEL, pos.x, pos.y, DWORD(-WHEEL_DELTA * y), 0);
+}
+
+bool WinApiInputEmulator::isMouseWheelSpeedAvailable() const
+{
+    return true;
+}
+
+void WinApiInputEmulator::emulateMouseWheelClick(InputEmulatorTypes::MouseWheelClick x, InputEmulatorTypes::MouseWheelClick y)
+{
+    emulateMouseWheelSpeed(mouseWheelClickToSpeed(x), mouseWheelClickToSpeed(y));
 }
 
 void WinApiInputEmulator::emulateMouseMoveRelative(int64_t dx, int64_t dy)
