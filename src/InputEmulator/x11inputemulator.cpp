@@ -79,23 +79,24 @@ unsigned long convertKey(InputEmulatorTypes::Key key, Display* display, bool& ok
     case InputEmulatorTypes::Key::Key_Z:
         return XKeysymToKeycode(display, (KeySym)key);
 
-    case InputEmulatorTypes::Key::Key_F1: return XK_F1;
-    case InputEmulatorTypes::Key::Key_F2: return XK_F2;
-    case InputEmulatorTypes::Key::Key_F3: return XK_F3;
-    case InputEmulatorTypes::Key::Key_F4: return XK_F4;
-    case InputEmulatorTypes::Key::Key_F5: return XK_F5;
-    case InputEmulatorTypes::Key::Key_F6: return XK_F6;
-    case InputEmulatorTypes::Key::Key_F7: return XK_F7;
-    case InputEmulatorTypes::Key::Key_F8: return XK_F8;
-    case InputEmulatorTypes::Key::Key_F9: return XK_F9;
-    case InputEmulatorTypes::Key::Key_F10: return XK_F10;
-    case InputEmulatorTypes::Key::Key_F11: return XK_F11;
-    case InputEmulatorTypes::Key::Key_F12: return XK_F12;
+    case InputEmulatorTypes::Key::Key_F1:
+    case InputEmulatorTypes::Key::Key_F2:
+    case InputEmulatorTypes::Key::Key_F3:
+    case InputEmulatorTypes::Key::Key_F4:
+    case InputEmulatorTypes::Key::Key_F5:
+    case InputEmulatorTypes::Key::Key_F6:
+    case InputEmulatorTypes::Key::Key_F7:
+    case InputEmulatorTypes::Key::Key_F8:
+    case InputEmulatorTypes::Key::Key_F9:
+    case InputEmulatorTypes::Key::Key_F10:
+    case InputEmulatorTypes::Key::Key_F11:
+    case InputEmulatorTypes::Key::Key_F12:
+        break;
 
-    case InputEmulatorTypes::Key::Key_Left: return XK_KP_Left;
-    case InputEmulatorTypes::Key::Key_Up: return XK_KP_Up;
-    case InputEmulatorTypes::Key::Key_Right: return XK_KP_Right;
-    case InputEmulatorTypes::Key::Key_Down: return XK_KP_Down;
+    case InputEmulatorTypes::Key::Key_Left: return XKeysymToKeycode(display, XK_Left);
+    case InputEmulatorTypes::Key::Key_Up: return XKeysymToKeycode(display, XK_Up);
+    case InputEmulatorTypes::Key::Key_Right: return XKeysymToKeycode(display, XK_Right);
+    case InputEmulatorTypes::Key::Key_Down: return XKeysymToKeycode(display, XK_Down);
 
     case InputEmulatorTypes::Key::Key_Home:
         break;
@@ -139,8 +140,7 @@ unsigned long convertKey(InputEmulatorTypes::Key key, Display* display, bool& ok
         break;
     case InputEmulatorTypes::Key::Key_Pause:
         break;
-    case InputEmulatorTypes::Key::Key_Space:
-        break;
+    case InputEmulatorTypes::Key::Key_Space: return XKeysymToKeycode(display, XK_space);
     }
 
     ok = false;
@@ -295,8 +295,6 @@ void X11inputemulator::emulateKeyboard(InputEmulatorTypes::Key key_, bool down)
         std::cerr << "Failed to convert key" << std::endl;
         return;
     }
-
-    std::cerr << (int64_t)key_ << " " << key << " " << down << std::endl;
 
     const int ret = XTestFakeKeyEvent((Display*)display, key, down, CurrentTime);
     XFlush((Display*)display);

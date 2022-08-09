@@ -38,12 +38,12 @@ void updateControll(SerialGamepad& gamepad, InputEmulator& emulator)
 
     if (gamepad.isButtonDownNow(3))
     {
-        emulator.emulateKeyboard(InputEmulatorTypes::Key::Key_A, true);
+        emulator.emulateKeyboard(InputEmulatorTypes::Key::Key_Space, true);
     }
 
     if (gamepad.isButtonUpNow(3))
     {
-        emulator.emulateKeyboard(InputEmulatorTypes::Key::Key_A, false);
+        emulator.emulateKeyboard(InputEmulatorTypes::Key::Key_Space, false);
     }
 }
 
