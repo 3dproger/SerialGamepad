@@ -207,7 +207,7 @@ void WinApiInputEmulator::emulateMouseWheel(double x, double y)
     mouse_event(MOUSEEVENTF_WHEEL, pos.x, pos.y, DWORD(-WHEEL_DELTA * y), 0);
 }
 
-void WinApiInputEmulator::emulateMouseMoveDelta(int64_t dx, int64_t dy)
+void WinApiInputEmulator::emulateMouseMoveRelative(int64_t dx, int64_t dy)
 {
     POINT p;
     if (!GetCursorPos(&p))
@@ -227,7 +227,7 @@ void WinApiInputEmulator::emulateMouseMoveDelta(int64_t dx, int64_t dy)
     }
 }
 
-void WinApiInputEmulator::emulateMouseMoveToCoord(int64_t x, int64_t y)
+void WinApiInputEmulator::emulateMouseMoveAbsolute(int64_t x, int64_t y)
 {
     if (!SetCursorPos(x, y))
     {

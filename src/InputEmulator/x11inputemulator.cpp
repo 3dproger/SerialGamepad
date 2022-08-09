@@ -71,12 +71,12 @@ void X11inputemulator::emulateMouseWheel(double x, double y)
     std::cerr << "Not implemented" << std::endl;
 }
 
-void X11inputemulator::emulateMouseMoveDelta(int64_t dx, int64_t dy)
+void X11inputemulator::emulateMouseMoveRelative(int64_t dx, int64_t dy)
 {
     std::cerr << "Not implemented" << std::endl;
 }
 
-void X11inputemulator::emulateMouseMoveToCoord(int64_t x, int64_t y)
+void X11inputemulator::emulateMouseMoveAbsolute(int64_t x, int64_t y)
 {
     std::cerr << "Not implemented" << std::endl;
 }
