@@ -2,11 +2,15 @@
 #if defined(_WIN32) || defined(_WIN64)
 #include "winapiinputemulator.h"
 #elif defined(__unix__)
-
+#include "x11inputemulator.h"
 #endif
 
 InputEmulator::InputEmulator()
+#if defined(_WIN32) || defined(_WIN64)
     : platform(*new WinApiInputEmulator())
+#elif defined(__unix__)
+    : platform(*new X11inputemulator())
+#endif
 {
 
 }

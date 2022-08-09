@@ -7,7 +7,7 @@ SerialGamepad::SerialGamepad(int baudRate_, QObject *parent)
     : QObject{parent}
     , baudRate(baudRate_)
 {
-    timerUpdatePorts.setInterval(1000);
+    timerUpdatePorts.setInterval(2000);
     connect(&timerUpdatePorts, &QTimer::timeout, this, &SerialGamepad::updatePorts);
     timerUpdatePorts.start();
     updatePorts();
@@ -60,34 +60,7 @@ bool SerialGamepad::isButtonUpNow(int button) const
 
 void SerialGamepad::updatePorts()
 {
-    const QList<QSerialPortInfo> infos = QSerialPortInfo::availablePorts();
-
-    for (const QSerialPortInfo& info : infos)
-    {
-        const QString name = info.portName();
-
-        if (!connections.contains(name))
-        {
-            QSerialPort* port = new QSerialPort(name, this);
-            port->setBaudRate(baudRate);
-            if (port->open(QIODevice::OpenModeFlag::ReadOnly))
-            {
-                qDebug() << "Serial port" << port->portName() << port->baudRate() << "opened";
-
-                connect(port, &QSerialPort::readyRead, this, &SerialGamepad::onReadyRead);
-
-                connections.insert(name, port);
-            }
-            else
-            {
-                qWarning() << "Failed to open serial port" << name;
-                port->deleteLater();
-            }
-        }
-    }
-
     const QStringList names = connections.keys();
-
     for (int i = 0; i < names.count(); ++i)
     {
         const QString name = names[i];
@@ -101,8 +74,54 @@ void SerialGamepad::updatePorts()
         if (!serial->isOpen())
         {
             qDebug() << "Serial port" << name << "close";
+            serial->close();
             connections.remove(name);
-            delete serial;
+            serial->deleteLater();
+        }
+    }
+
+    const QList<QSerialPortInfo> infos = QSerialPortInfo::availablePorts();
+    QSet<QString> foundNames;
+
+    for (const QSerialPortInfo& info : infos)
+    {
+        const QString name = info.portName();
+        foundNames.insert(name);
+
+        if (!connections.contains(name))
+        {
+            QSerialPort* port = new QSerialPort(name, this);
+            port->setBaudRate(baudRate);
+            port->setDataBits(QSerialPort::Data8);
+            port->setParity(QSerialPort::NoParity);
+            port->setStopBits(QSerialPort::OneStop);
+            port->setFlowControl(QSerialPort::NoFlowControl);
+            if (port->open(QIODevice::OpenModeFlag::ReadWrite))
+            {
+                qDebug() << "Serial port" << port->portName() << port->baudRate() << "opened";
+
+                connect(port, &QSerialPort::readyRead, this, &SerialGamepad::onReadyRead);
+
+                connections.insert(name, port);
+            }
+            else
+            {
+                //qWarning() << "Failed to open serial port" << name;
+                port->deleteLater();
+            }
+        }
+    }
+
+    for (auto it = connections.begin(); it != connections.end(); ++it)
+    {
+        const QString name = it.key();
+        if (!foundNames.contains(it.key()))
+        {
+            qDebug() << "Serial port" << name << "close";
+            it.value()->close();
+            connections.remove(name);
+            it.value()->deleteLater();
+            break;
         }
     }
 }
