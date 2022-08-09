@@ -1,5 +1,5 @@
 #define BUTTONS_COUNT 4
-const int buttonsPins[BUTTONS_COUNT] = { 16, 5, 4, 14 };
+const int buttonsPins[BUTTONS_COUNT] = { 16, 5, 4, 14 }; // ESP2866
 int timer = 0;
 
 bool buttonsStates[BUTTONS_COUNT];
@@ -45,11 +45,12 @@ void loop()
     timer = 0;
   }
 
-  if (timer > 50000)
+  if (timer > 500)
   {
     printStates();
     timer = 0;
   }
   
   timer++;
+  delay(1);
 }
