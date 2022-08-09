@@ -30,12 +30,12 @@ void InputEmulator::emulateMouseWheel(double x, double y)
     platform.emulateMouseWheel(x, y);
 }
 
-void InputEmulator::emulateMouseMoveDelta(int64_t dx, int64_t dy)
+void InputEmulator::emulateMouseMoveRelative(int64_t dx, int64_t dy)
 {
     platform.emulateMouseMoveRelative(dx, dy);
 }
 
-void InputEmulator::emulateMouseMoveToCoord(int64_t x, int64_t y)
+void InputEmulator::emulateMouseMoveAbsolute(int64_t x, int64_t y)
 {
     platform.emulateMouseMoveAbsolute(x, y);
 }
